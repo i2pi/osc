@@ -100,5 +100,71 @@ void main() {
         expect(stringCodec.encoder.convert('foo'), [102, 111, 111, 0]);
       });
     });
+
+    group('booleans', () {
+      test('true decode', () {
+        expect(booleanTrueCodec.decoder.convert([]), true);
+      });
+
+      test('true encode', () {
+        expect(booleanTrueCodec.encoder.convert(true), <int>[]);
+      });
+
+      test('false decode', () {
+        expect(booleanFalseCodec.decoder.convert([]), false);
+      });
+
+      test('false encode', () {
+        expect(booleanFalseCodec.encoder.convert(false), <int>[]);
+      });
+
+      test('true typeTag', () {
+        expect(booleanTrueCodec.typeTag, 'T');
+      });
+
+      test('false typeTag', () {
+        expect(booleanFalseCodec.typeTag, 'F');
+      });
+
+      test('true appliesTo', () {
+        expect(booleanTrueCodec.appliesTo(true), isTrue);
+        expect(booleanTrueCodec.appliesTo(false), isFalse);
+      });
+
+      test('false appliesTo', () {
+        expect(booleanFalseCodec.appliesTo(false), isTrue);
+        expect(booleanFalseCodec.appliesTo(true), isFalse);
+      });
+
+      test('length is zero', () {
+        expect(booleanTrueCodec.length(true), 0);
+        expect(booleanFalseCodec.length(false), 0);
+      });
+    });
+
+    group('boolean messages', () {
+      test('encode true', () {
+        final message = OSCMessage('/bool', arguments: [true]);
+        final encoded = oscMessageCodec.encode(message);
+        final decoded = oscMessageCodec.decode(encoded);
+        expect(decoded.address, '/bool');
+        expect(decoded.arguments, <Object>[true]);
+      });
+
+      test('encode false', () {
+        final message = OSCMessage('/bool', arguments: [false]);
+        final encoded = oscMessageCodec.encode(message);
+        final decoded = oscMessageCodec.decode(encoded);
+        expect(decoded.address, '/bool');
+        expect(decoded.arguments, <Object>[false]);
+      });
+
+      test('encode mixed', () {
+        final message = OSCMessage('/mixed', arguments: [true, false, true]);
+        final encoded = oscMessageCodec.encode(message);
+        final decoded = oscMessageCodec.decode(encoded);
+        expect(decoded.arguments, <Object>[true, false, true]);
+      });
+    });
   });
 }
