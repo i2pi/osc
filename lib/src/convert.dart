@@ -243,9 +243,9 @@ class StringDecoder extends DataDecoder<String> {
   String convert(List<int> input) {
     final nextNull = input.indexOf(0);
     if (nextNull == -1) {
-      return utf8.decode(input);
+      return utf8.decode(input, allowMalformed: true);
     } else {
-      return utf8.decode(input.sublist(0, nextNull));
+      return utf8.decode(input.sublist(0, nextNull), allowMalformed: true);
     }
   }
 }

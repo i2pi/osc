@@ -8,6 +8,10 @@ import 'package:test/test.dart';
 
 void main() {
   group('codecs', () {
+    test('a string with invalid UTF-8 decodes instead of throwing', () {
+      // A device preset name with 0xFF bytes made the reply undecodable and the app's preset list time out.
+      expect(const StringDecoder().convert([0x7f, 0xff, 0x41, 0x00, 0x00]), '\x7f\uFFFDA');
+    });
     group('forType', () {
       test('unknown', () {
         expect(() => DataCodec.forType('x'),
